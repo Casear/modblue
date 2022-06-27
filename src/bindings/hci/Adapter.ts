@@ -237,7 +237,7 @@ export class HciAdapter extends Adapter {
 		return this.advertising;
 	}
 
-	public async startAdvertising(deviceName: string, serviceUUIDs: string[] = []): Promise<void> {
+	public async startAdvertising(deviceName: string, serviceUUIDs: string[] = [], manufacturerData?: string): Promise<void> {
 		await this.init();
 
 		if (this.advertising) {
@@ -252,7 +252,7 @@ export class HciAdapter extends Adapter {
 		this.advertisedServiceUUIDs = serviceUUIDs;
 		await this.gatt.prepare(this.deviceName);
 
-		await this.gap.startAdvertising(this.deviceName, serviceUUIDs);
+		await this.gap.startAdvertising(this.deviceName, serviceUUIDs, manufacturerData);
 
 		this.advertising = true;
 	}

@@ -88,7 +88,7 @@ export class Gap extends TypedEmitter<GapEvents> {
 		this.scanState = 'stopped';
 	}
 
-	public async startAdvertising(name: string, serviceUuids: string[]): Promise<void> {
+	public async startAdvertising(name: string, serviceUuids: string[], manufacturerData?: string): Promise<void> {
 		let advertisementDataLength = 3;
 		let scanDataLength = 0;
 
@@ -99,7 +99,7 @@ export class Gap extends TypedEmitter<GapEvents> {
 		if (name && name.length) {
 			scanDataLength += 2 + name.length;
 		}
-
+		
 		if (serviceUuids && serviceUuids.length) {
 			for (i = 0; i < serviceUuids.length; i++) {
 				const serviceUuid = Buffer.from(
@@ -124,6 +124,9 @@ export class Gap extends TypedEmitter<GapEvents> {
 
 		if (serviceUuids128bit.length) {
 			advertisementDataLength += 2 + 16 * serviceUuids128bit.length;
+		}
+		if (manufacturerData && manufacturerData.length) {
+			advertisementDataLength += 2 + manufacturerData.length;
 		}
 
 		const advertisementData = Buffer.alloc(advertisementDataLength);
@@ -161,7 +164,15 @@ export class Gap extends TypedEmitter<GapEvents> {
 				advertisementDataOffset += serviceUuids128bit[i].length;
 			}
 		}
+		
+		if (manufacturerData && manufacturerData.length) {
+			const manufacturerDataBuffer = Buffer.from(manufacturerData);
 
+			advertisementData.writeUInt8(1 + manufacturerDataBuffer.length, advertisementDataOffset);
+			advertisementData.writeUInt8(0xFF, advertisementDataOffset+1);
+			manufacturerDataBuffer.copy(advertisementData, advertisementDataOffset+2);
+		}
+		
 		// name
 		if (name && name.length) {
 			const nameBuffer = Buffer.from(name);
@@ -170,7 +181,7 @@ export class Gap extends TypedEmitter<GapEvents> {
 			scanData.writeUInt8(0x08, 1);
 			nameBuffer.copy(scanData, 2);
 		}
-
+		
 		await this.startAdvertisingWithEIRData(advertisementData, scanData);
 	}
 

@@ -25,7 +25,7 @@ export declare class Gap extends TypedEmitter<GapEvents> {
     constructor(hci: Hci);
     startScanning(allowDuplicates: boolean): Promise<void>;
     stopScanning(): Promise<void>;
-    startAdvertising(name: string, serviceUuids: string[]): Promise<void>;
+    startAdvertising(name: string, serviceUuids: string[], manufacturerData?: string): Promise<void>;
     startAdvertisingWithEIRData(advertisementData?: Buffer, scanData?: Buffer): Promise<void>;
     stopAdvertising(): Promise<void>;
     private onHciLeAdvertisingReport;

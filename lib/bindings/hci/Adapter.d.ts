@@ -29,7 +29,7 @@ export declare class HciAdapter extends Adapter {
     connect(peripheral: HciPeripheral, minInterval?: number, maxInterval?: number, latency?: number, supervisionTimeout?: number): Promise<void>;
     disconnect(peripheral: HciPeripheral): Promise<void>;
     isAdvertising(): boolean;
-    startAdvertising(deviceName: string, serviceUUIDs?: string[]): Promise<void>;
+    startAdvertising(deviceName: string, serviceUUIDs?: string[], manufacturerData?: string): Promise<void>;
     stopAdvertising(): Promise<void>;
     setupGatt(maxMtu?: number): Promise<HciGattLocal>;
     private onLeScanEnable;

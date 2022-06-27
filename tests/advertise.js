@@ -55,9 +55,7 @@ const main = async () => {
 	);
 
 	console.log('Starting advertisement...');
-
 	await adapter.startAdvertising(NAME, ['48ee0000bf49460ca3d77ec7a512a4ce']);
-
 	console.log(`Advertising as ${adapter.address}...`);
 };
 

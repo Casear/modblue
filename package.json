@@ -70,7 +70,7 @@
 		"tiny-typed-emitter": "2.1.0"
 	},
 	"peerDependencies": {
-		"@modum-io/bluetooth-hci-socket": "0.6.x",
+		"@abandonware/bluetooth-hci-socket": "*",
 		"dbus-next": "0.10.x"
 	},
 	"devDependencies": {
