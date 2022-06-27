@@ -139,31 +139,31 @@ export class Gap extends TypedEmitter<GapEvents> {
 
 		let advertisementDataOffset = 3;
 
-		if (serviceUuids16bit.length) {
-			advertisementData.writeUInt8(1 + 2 * serviceUuids16bit.length, advertisementDataOffset);
-			advertisementDataOffset++;
+		// if (serviceUuids16bit.length) {
+		// 	advertisementData.writeUInt8(1 + 2 * serviceUuids16bit.length, advertisementDataOffset);
+		// 	advertisementDataOffset++;
 
-			advertisementData.writeUInt8(0x03, advertisementDataOffset);
-			advertisementDataOffset++;
+		// 	advertisementData.writeUInt8(0x03, advertisementDataOffset);
+		// 	advertisementDataOffset++;
 
-			for (i = 0; i < serviceUuids16bit.length; i++) {
-				serviceUuids16bit[i].copy(advertisementData, advertisementDataOffset);
-				advertisementDataOffset += serviceUuids16bit[i].length;
-			}
-		}
+		// 	for (i = 0; i < serviceUuids16bit.length; i++) {
+		// 		serviceUuids16bit[i].copy(advertisementData, advertisementDataOffset);
+		// 		advertisementDataOffset += serviceUuids16bit[i].length;
+		// 	}
+		// }
 
-		if (serviceUuids128bit.length) {
-			advertisementData.writeUInt8(1 + 16 * serviceUuids128bit.length, advertisementDataOffset);
-			advertisementDataOffset++;
+		// if (serviceUuids128bit.length) {
+		// 	advertisementData.writeUInt8(1 + 16 * serviceUuids128bit.length, advertisementDataOffset);
+		// 	advertisementDataOffset++;
 
-			advertisementData.writeUInt8(0x06, advertisementDataOffset);
-			advertisementDataOffset++;
+		// 	advertisementData.writeUInt8(0x06, advertisementDataOffset);
+		// 	advertisementDataOffset++;
 
-			for (i = 0; i < serviceUuids128bit.length; i++) {
-				serviceUuids128bit[i].copy(advertisementData, advertisementDataOffset);
-				advertisementDataOffset += serviceUuids128bit[i].length;
-			}
-		}
+		// 	for (i = 0; i < serviceUuids128bit.length; i++) {
+		// 		serviceUuids128bit[i].copy(advertisementData, advertisementDataOffset);
+		// 		advertisementDataOffset += serviceUuids128bit[i].length;
+		// 	}
+		// }
 		
 		if (manufacturerData && manufacturerData.length) {
 			const manufacturerDataBuffer = Buffer.from(manufacturerData);
