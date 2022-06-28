@@ -193,12 +193,12 @@ export class Gap extends TypedEmitter<GapEvents> {
 		advertisementData: Buffer = Buffer.alloc(0),
 		scanData: Buffer = Buffer.alloc(0)
 	): Promise<void> {
-		// if (advertisementData.length > 31) {
-		// 	console.log(advertisementData.length);
-		// 	throw new Error('Advertisement data is over maximum limit of 31 bytes');
-		// } else if (scanData.length > 31) {
-		// 	throw new Error('Scan data is over maximum limit of 31 bytes');
-		// }
+		if (advertisementData.length > 31) {
+			console.log(advertisementData.length);
+			throw new Error('Advertisement data is over maximum limit of 31 bytes');
+		} else if (scanData.length > 31) {
+			throw new Error('Scan data is over maximum limit of 31 bytes');
+		}
 
 		this.advertiseState = 'starting';
 
