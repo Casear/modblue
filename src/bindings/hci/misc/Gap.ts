@@ -180,8 +180,8 @@ export class Gap extends TypedEmitter<GapEvents> {
 		if (manufacturerData && manufacturerData.length) {
 			const manufacturerDataBuffer = Buffer.from(manufacturerData,"hex");
 
-			advertisementData.writeUInt8(1 + manufacturerDataBuffer.length, index);
-			advertisementData.writeUInt8(0xFF, index+1);
+			scanData.writeUInt8(1 + manufacturerDataBuffer.length, index);
+			scanData.writeUInt8(0xFF, index+1);
 			manufacturerDataBuffer.copy(scanData, index+2);
 		}
 		console.log(advertisementData)
