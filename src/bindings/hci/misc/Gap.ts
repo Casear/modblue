@@ -126,7 +126,7 @@ export class Gap extends TypedEmitter<GapEvents> {
 			advertisementDataLength += 2 + 16 * serviceUuids128bit.length;
 		}
 		if (manufacturerData && manufacturerData.length) {
-			advertisementDataLength += 2 + manufacturerData.length;
+			advertisementDataLength += 2 + manufacturerData.length/2;
 		}
 
 		const advertisementData = Buffer.alloc(advertisementDataLength);
@@ -139,39 +139,41 @@ export class Gap extends TypedEmitter<GapEvents> {
 
 		let advertisementDataOffset = 3;
 
-		// if (serviceUuids16bit.length) {
-		// 	advertisementData.writeUInt8(1 + 2 * serviceUuids16bit.length, advertisementDataOffset);
-		// 	advertisementDataOffset++;
+		if (serviceUuids16bit.length) {
+			advertisementData.writeUInt8(1 + 2 * serviceUuids16bit.length, advertisementDataOffset);
+			advertisementDataOffset++;
 
-		// 	advertisementData.writeUInt8(0x03, advertisementDataOffset);
-		// 	advertisementDataOffset++;
+			advertisementData.writeUInt8(0x03, advertisementDataOffset);
+			advertisementDataOffset++;
 
-		// 	for (i = 0; i < serviceUuids16bit.length; i++) {
-		// 		serviceUuids16bit[i].copy(advertisementData, advertisementDataOffset);
-		// 		advertisementDataOffset += serviceUuids16bit[i].length;
-		// 	}
-		// }
+			for (i = 0; i < serviceUuids16bit.length; i++) {
+				serviceUuids16bit[i].copy(advertisementData, advertisementDataOffset);
+				advertisementDataOffset += serviceUuids16bit[i].length;
+			}
+		}
 
-		// if (serviceUuids128bit.length) {
-		// 	advertisementData.writeUInt8(1 + 16 * serviceUuids128bit.length, advertisementDataOffset);
-		// 	advertisementDataOffset++;
+		if (serviceUuids128bit.length) {
+			advertisementData.writeUInt8(1 + 16 * serviceUuids128bit.length, advertisementDataOffset);
+			advertisementDataOffset++;
 
-		// 	advertisementData.writeUInt8(0x06, advertisementDataOffset);
-		// 	advertisementDataOffset++;
+			advertisementData.writeUInt8(0x06, advertisementDataOffset);
+			advertisementDataOffset++;
 
-		// 	for (i = 0; i < serviceUuids128bit.length; i++) {
-		// 		serviceUuids128bit[i].copy(advertisementData, advertisementDataOffset);
-		// 		advertisementDataOffset += serviceUuids128bit[i].length;
-		// 	}
-		// }
-		
+			for (i = 0; i < serviceUuids128bit.length; i++) {
+				serviceUuids128bit[i].copy(advertisementData, advertisementDataOffset);
+				advertisementDataOffset += serviceUuids128bit[i].length;
+			}
+		}
+		console.log(advertisementData);
 		if (manufacturerData && manufacturerData.length) {
-			const manufacturerDataBuffer = Buffer.from(manufacturerData);
+			console.log(312);
+			const manufacturerDataBuffer = Buffer.from(manufacturerData,"hex");
 
 			advertisementData.writeUInt8(1 + manufacturerDataBuffer.length, advertisementDataOffset);
 			advertisementData.writeUInt8(0xFF, advertisementDataOffset+1);
 			manufacturerDataBuffer.copy(advertisementData, advertisementDataOffset+2);
 		}
+		console.log(advertisementData);
 		
 		// name
 		if (name && name.length) {
@@ -181,7 +183,8 @@ export class Gap extends TypedEmitter<GapEvents> {
 			scanData.writeUInt8(0x08, 1);
 			nameBuffer.copy(scanData, 2);
 		}
-		
+		console.log(advertisementData)
+		console.log(scanData)
 		await this.startAdvertisingWithEIRData(advertisementData, scanData);
 	}
 
@@ -189,11 +192,12 @@ export class Gap extends TypedEmitter<GapEvents> {
 		advertisementData: Buffer = Buffer.alloc(0),
 		scanData: Buffer = Buffer.alloc(0)
 	): Promise<void> {
-		if (advertisementData.length > 31) {
-			throw new Error('Advertisement data is over maximum limit of 31 bytes');
-		} else if (scanData.length > 31) {
-			throw new Error('Scan data is over maximum limit of 31 bytes');
-		}
+		// if (advertisementData.length > 31) {
+		// 	console.log(advertisementData.length);
+		// 	throw new Error('Advertisement data is over maximum limit of 31 bytes');
+		// } else if (scanData.length > 31) {
+		// 	throw new Error('Scan data is over maximum limit of 31 bytes');
+		// }
 
 		this.advertiseState = 'starting';
 

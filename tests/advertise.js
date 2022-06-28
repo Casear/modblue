@@ -39,23 +39,15 @@ const main = async () => {
 	console.log(`Using adapter ${adapter.id}`);
 
 	const gatt = await adapter.setupGatt();
-	const srv = await gatt.addService('48ee0000bf49460ca3d77ec7a512a4ce');
-	await srv.addCharacteristic('48ee0001bf49460ca3d77ec7a512a4ce', ['read'], [], Buffer.from('test', 'utf-8'));
-	await srv.addCharacteristic('48ee0002bf49460ca3d77ec7a512a4ce', ['read'], [], async (offset) => {
+	const srv = await gatt.addService('6e40ff015fe146a893309b4670ca5106');
+	await srv.addCharacteristic('6e40ff025fe146a893309b4670ca5106', ['write'], [], Buffer.from('test', 'utf-8'));
+	await srv.addCharacteristic('6e40ff035fe146a893309b4670ca5106', ['notify'], [], async (offset) => {
 		return [0, Buffer.from('other', 'utf-8').slice(offset)];
 	});
-	await srv.addCharacteristic(
-		'48ee0003bf49460ca3d77ec7a512a4cd',
-		['write', 'write-without-response'],
-		[],
-		null,
-		(offset, data, withoutResponse) => {
-			console.log('writing', offset, data, withoutResponse);
-		}
-	);
 
 	console.log('Starting advertisement...');
-	await adapter.startAdvertising(NAME, ['48ee0000bf49460ca3d77ec7a512a4ce']);
+	const address = ('01'+adapter.address.replaceAll(':','')).padEnd(26,'0');
+	await adapter.startAdvertising(NAME, ['6e40ff015fe146a893309b4670ca5106']);
 	console.log(`Advertising as ${adapter.address}...`);
 };
 
