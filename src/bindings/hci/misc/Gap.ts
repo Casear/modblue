@@ -99,7 +99,9 @@ export class Gap extends TypedEmitter<GapEvents> {
 		if (name && name.length) {
 			scanDataLength += 2 + name.length;
 		}
-		
+		if (manufacturerData && manufacturerData.length) {
+			scanDataLength += 2 + manufacturerData.length/2;
+		}
 		if (serviceUuids && serviceUuids.length) {
 			for (i = 0; i < serviceUuids.length; i++) {
 				const serviceUuid = Buffer.from(
@@ -125,9 +127,7 @@ export class Gap extends TypedEmitter<GapEvents> {
 		if (serviceUuids128bit.length) {
 			advertisementDataLength += 2 + 16 * serviceUuids128bit.length;
 		}
-		if (manufacturerData && manufacturerData.length) {
-			advertisementDataLength += 2 + manufacturerData.length/2;
-		}
+		
 
 		const advertisementData = Buffer.alloc(advertisementDataLength);
 		const scanData = Buffer.alloc(scanDataLength);
@@ -165,23 +165,24 @@ export class Gap extends TypedEmitter<GapEvents> {
 			}
 		}
 		console.log(advertisementData);
-		if (manufacturerData && manufacturerData.length) {
-			console.log(312);
-			const manufacturerDataBuffer = Buffer.from(manufacturerData,"hex");
-
-			advertisementData.writeUInt8(1 + manufacturerDataBuffer.length, advertisementDataOffset);
-			advertisementData.writeUInt8(0xFF, advertisementDataOffset+1);
-			manufacturerDataBuffer.copy(advertisementData, advertisementDataOffset+2);
-		}
-		console.log(advertisementData);
+		
 		
 		// name
+		let index = 0;
 		if (name && name.length) {
 			const nameBuffer = Buffer.from(name);
 
 			scanData.writeUInt8(1 + nameBuffer.length, 0);
 			scanData.writeUInt8(0x08, 1);
 			nameBuffer.copy(scanData, 2);
+			index = 2 + nameBuffer.length;
+		}
+		if (manufacturerData && manufacturerData.length) {
+			const manufacturerDataBuffer = Buffer.from(manufacturerData,"hex");
+
+			advertisementData.writeUInt8(1 + manufacturerDataBuffer.length, index);
+			advertisementData.writeUInt8(0xFF, index+1);
+			manufacturerDataBuffer.copy(scanData, index+2);
 		}
 		console.log(advertisementData)
 		console.log(scanData)

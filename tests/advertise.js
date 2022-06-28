@@ -47,7 +47,7 @@ const main = async () => {
 
 	console.log('Starting advertisement...');
 	const address = ('01'+adapter.address.replaceAll(':','')).padEnd(26,'0');
-	await adapter.startAdvertising(NAME, ['6e40ff015fe146a893309b4670ca5106']);
+	await adapter.startAdvertising(NAME, ['6e40ff015fe146a893309b4670ca5106'],address);
 	console.log(`Advertising as ${adapter.address}...`);
 };
 
